@@ -9,7 +9,8 @@ class AuthController < ApplicationController
                 user: @user,
                 avatar_url: avatar_url,
                 token: token,
-                authenticated: true
+                authenticated: true,
+                user_rooms: @user.rooms
             }
         else 
             render json: {
