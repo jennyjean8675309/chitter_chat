@@ -1,29 +1,30 @@
 class UsersController < ApplicationController
     def index
         users = User.all
-        render json: users
+        render json: UserSerializer.new(users)
     end
     
     def create
-        user = User.create(username: params['user']['username'], password: params['user']['password'])
-        payload = {'user_id': user.id}
-        token = encode(payload)
-        avatar_url = rails_blob_path(user.avatar) if user.avatar.attached?
-        render json: {
-            user: user,
-            avatar_url: avatar_url,
-            token: token,
-            authenticated: true
-        }
+        user = User.new(username: params['user']['username'], password: params['user']['password'])
+        if user.save
+            payload = {'user_id': user.id}
+            token = encode(payload)
+            render json: {
+                user: UserSerializer.new(user),
+                token: token,
+                authenticated: true
+            }
+        else 
+            render json: { message: 'There was an error creating your account' }
+        end
     end
 
     def show
         token = request.headers['Authentication'].split(' ')[1]
         payload = decode(token)
         user = User.find(payload['user_id'])
-        avatar_url = rails_blob_path(user.avatar) if user.avatar.attached?
         if user
-            render json: {user: user, avatar_url: avatar_url, status: :accepted}
+            render json: UserSerializer.new(user)
         else 
             render json: { message: 'Error', authenticated: false }
         end
@@ -32,8 +33,7 @@ class UsersController < ApplicationController
     def update
         user = User.find(params[:id])
         user.update(avatar: params[:avatar])
-        avatar_url = rails_blob_path(user.avatar) if user.avatar.attached?
-        render json: {user: user, avatar_url: avatar_url}
+        render json: UserSerializer.new(user)
     end
 
     private

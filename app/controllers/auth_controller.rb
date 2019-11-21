@@ -1,16 +1,14 @@
 class AuthController < ApplicationController
     def create
-        @user = User.find_by(username: params[:username])
-        if @user && @user.authenticate(params[:password])
-            payload = {'user_id': @user.id}
+        user = User.find_by(username: params[:username])
+        if user && user.authenticate(params[:password])
+            payload = {'user_id': user.id}
             token = encode(payload)
-            avatar_url = rails_blob_path(@user.avatar) if @user.avatar.attached?
             render json: {
-                user: @user,
-                avatar_url: avatar_url,
+                user: UserSerializer.new(user),
                 token: token,
                 authenticated: true,
-                user_rooms: @user.rooms
+                user_rooms: RoomSerializer.new(user.rooms)
             }
         else 
             render json: {

@@ -18,6 +18,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'jwt', '~> 2.1'
 gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 gem 'activestorage'
+gem 'fast_jsonapi'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
