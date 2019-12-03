@@ -2,6 +2,6 @@ class RoomSerializer
   include FastJsonapi::ObjectSerializer
   attributes :name, :description, :messages
   attribute :users do |room|
-    room.users.uniq
+    UserSerializer.new(room.users.uniq)
   end
 end
