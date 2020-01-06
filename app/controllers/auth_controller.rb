@@ -12,7 +12,7 @@ class AuthController < ApplicationController
             }
         else 
             render json: {
-                message: 'This username/password combination does not exist',
+                message: 'This username/password combination cannot be found',
                 authenticated: false
             }
         end
