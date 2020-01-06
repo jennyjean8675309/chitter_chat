@@ -8,6 +8,7 @@ class MessagesController < ApplicationController
         message = Message.new(message_params)
         room = Room.find(message_params["room_id"])
         if message.save
+            puts "successfully saved a message!"
             RoomsChannel.broadcast_to(room, {
                 room: RoomSerializer.new(room),
                 users: UserSerializer.new(room.users),
